@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Loader from "../../components/Loader";
-import { BASE_URI, REGUEST_URI } from "../../next.config";
+import { BASE_URI } from "../../next.config";
 
 const register = () => {
   const [form, setForm] = useState("");
@@ -13,7 +13,7 @@ const register = () => {
     router.push("/auth/login");
   };
 
-  const handler = async (e) => {
+  const handlerForm = async (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -21,7 +21,7 @@ const register = () => {
     try {
       e.preventDefault();
       setIsLoad(true);
-      const user = await fetch(`${REGUEST_URI}?base=/auth/register`, {
+      const user = await fetch(`${BASE_URI}/connectDB?base=/auth/register`, {
         method: "POST",
         body: JSON.stringify(form),
       }).then((res) => res.json());
@@ -56,7 +56,7 @@ const register = () => {
                   name="email"
                   type="email"
                   className="validate"
-                  onChange={handler}
+                  onChange={handlerForm}
                 />
               </div>
               <div className="input-field">
@@ -66,7 +66,7 @@ const register = () => {
                   name="password"
                   type="password"
                   className="validate"
-                  onChange={handler}
+                  onChange={handlerForm}
                 />
               </div>
               <div className="card-action">

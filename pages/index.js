@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Timer from "../components/timer";
-import { BASE_URI } from "../next.config";
+// import { BASE_URI } from "../next.config";
 import styles from "../styles/Home.module.css";
 
 export default function Home(db) {
@@ -12,7 +12,7 @@ export default function Home(db) {
 
   const router = useRouter();
 
-  const handler = (e) => {
+  const handleClick = (e) => {
     setClick({ ...click, [e.target.name]: e.target.value });
     console.log(click);
   };
@@ -25,17 +25,20 @@ export default function Home(db) {
     try {
       console.log(e.target.value);
 
-      handler(e);
+      handleClick(e);
       setIsButton(true);
       setTimeout(() => {
         setIsButton(false);
       }, 20000);
       console.log(click);
-      const res = await fetch(`${BASE_URI}/api/connectDB?base=/`, {
-        method: "POST",
-        body: JSON.stringify(click),
-        userId: user._id,
-      });
+      const res = await fetch(
+        `https://test-work-alpha.vercel.app/api/connectDB?base=/`,
+        {
+          method: "POST",
+          body: JSON.stringify(click),
+          userId: user._id,
+        }
+      );
       const userClick = await res.json();
       console.log(userClick);
     } catch (error) {
@@ -45,7 +48,9 @@ export default function Home(db) {
 
   const fetchData = async (us) => {
     try {
-      const data = await fetch(`${BASE_URI}/api/connectDB?userId=${us.userId}`);
+      const data = await fetch(
+        `https://test-work-alpha.vercel.app/api/home?userId=${us.userId}`
+      );
       const dataUser = await data.json();
       setUser(dataUser);
     } catch (error) {

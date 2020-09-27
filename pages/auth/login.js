@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Loader from "../../components/Loader";
-import { BASE_URI } from "../../next.config";
+// import { BASE_URI } from "../../next.config";
 
 const login = () => {
   const [form, setForm] = useState("");
@@ -13,7 +13,7 @@ const login = () => {
     router.push("/");
   };
 
-  const handler = async (e) => {
+  const handlerForms = async (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -22,7 +22,7 @@ const login = () => {
       e.preventDefault();
       setIsLoad(true);
       const res = await fetch(
-        `${BASE_URI}/auth/login/api/connectDB?base=/auth/login`,
+        `https://test-work-alpha.vercel.app/api/connectDB?base=/auth/login`,
         {
           method: "POST",
           body: JSON.stringify(form),
@@ -62,7 +62,7 @@ const login = () => {
                     name="email"
                     type="email"
                     className="validate"
-                    onChange={handler}
+                    onChange={handlerForms}
                   />
                 </div>
                 <div className="input-field">
@@ -71,7 +71,7 @@ const login = () => {
                     placeholder="Напишіть Ваш пароль"
                     name="password"
                     type="password"
-                    onChange={handler}
+                    onChange={handlerForms}
                     className="validate"
                   />
                 </div>
