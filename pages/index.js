@@ -79,7 +79,7 @@ export default function Home(db) {
         />
       </Head>
       <main className={styles.main}>
-        <form onChange={handler} method="POST">
+        <form method="POST">
           <button
             type="submit"
             name="button"
