@@ -1,21 +1,14 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Loader from "../components/Loader";
 import Timer from "../components/timer";
-// import { BASE_URI } from "../next.config";
 import styles from "../styles/Home.module.css";
 
 export default function Home(db) {
   const [isButton, setIsButton] = useState(false);
   const [user, setUser] = useState("");
-  const [click, setClick] = useState();
-
   const router = useRouter();
-
-  const handleClick = (e) => {
-    setClick({ ...click, [e.target.name]: e.target.value });
-    console.log(click);
-  };
 
   const handleLink = () => {
     router.push("/auth/login");
@@ -23,24 +16,22 @@ export default function Home(db) {
 
   const clickButton = async (e) => {
     try {
-      console.log(e.target.value);
-
-      handleClick(e);
-      setIsButton(true);
-      setTimeout(() => {
+      const click = { [e.target.name]: e.target.value };
+      let ti = setTimeout(() => {
         setIsButton(false);
       }, 20000);
-      console.log(click);
-      const res = await fetch(
-        `https://test-work-alpha.vercel.app/api/connectDB?base=/`,
-        {
-          method: "POST",
-          body: JSON.stringify(click),
-          userId: user._id,
-        }
-      );
-      const userClick = await res.json();
-      console.log(userClick);
+      setIsButton(true);
+      clearTimeout(ti);
+      const userId = user._id;
+      console.log(userId);
+      const res = await fetch(`http://localhost:3000/api/connectDB?base=/`, {
+        method: "POST",
+        body: JSON.stringify({ click, userId }),
+      });
+      // const userClick = await fetchData(user);
+      // console.log(userClick);
+      // setUser(userClick);
+      // console.log(user);
     } catch (error) {
       console.log(error);
     }
@@ -49,7 +40,7 @@ export default function Home(db) {
   const fetchData = async (us) => {
     try {
       const data = await fetch(
-        `https://test-work-alpha.vercel.app/api/home?userId=${us.userId}`
+        `http://localhost:3000/api/home?userId=${us.userId}`
       );
       const dataUser = await data.json();
       setUser(dataUser);
@@ -66,7 +57,7 @@ export default function Home(db) {
     if (res) {
       fetchData(res);
     }
-  }, []);
+  }, [clickButton]);
 
   return (
     <div className={styles.container}>
@@ -79,47 +70,50 @@ export default function Home(db) {
         />
       </Head>
       <main className={styles.main}>
-        <form method="POST">
-          <button
-            type="submit"
-            name="button"
-            value="button1"
-            disabled={isButton}
-            onClick={clickButton}
+        {/* <form method="POST"> */}
+        <button
+          type="submit"
+          name="button"
+          value="button1"
+          disabled={isButton}
+          onClick={clickButton}
 
-            // onChange={handler}
-          >
-            Кнопка 1
-          </button>
-          <button
-            type="submit"
-            name="button"
-            value="button2"
-            onClick={clickButton}
-            disabled={isButton}
-            // onChange={handler}
-          >
-            Кнопка 2
-          </button>
-          <button
-            type="submit"
-            name="button"
-            value="button3"
-            onClick={clickButton}
-            disabled={isButton}
-            // onChange={handler}
-          >
-            Кнопка 3
-          </button>
-        </form>
+          // onChange={handler}
+        >
+          Кнопка 1
+        </button>
+        <button
+          type="submit"
+          name="button"
+          value="button2"
+          onClick={clickButton}
+          disabled={isButton}
+          // onChange={handler}
+        >
+          Кнопка 2
+        </button>
+        <button
+          type="submit"
+          name="button"
+          value="button3"
+          onClick={clickButton}
+          disabled={isButton}
+          // onChange={handler}
+        >
+          Кнопка 3
+        </button>
+        {/* </form> */}
         {isButton && <Timer isButton={isButton} />}
-        {user && (
-          <div className="click">
-            <p>Кнопка 1 натиснута {user.clicks.button1} раз</p>
-            <p>Кнопка 3 натиснута {user.clicks.button3} раз</p>
-            <p>Кнопка 2 натиснута {user.clicks.button2} раз</p>
-          </div>
-        )}
+        <div className="card">
+          {!user && <Loader />}
+          {user && (
+            <div className="click">
+              <p>Кнопка 1 натиснута {user.clicks.button1} раз</p>
+              <p>Кнопка 2 натиснута {user.clicks.button2} раз</p>
+              <p>Кнопка 3 натиснута {user.clicks.button3} раз</p>
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );

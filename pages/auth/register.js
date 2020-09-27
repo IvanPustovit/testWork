@@ -21,10 +21,13 @@ const register = () => {
     try {
       e.preventDefault();
       setIsLoad(true);
-      const user = await fetch(`${BASE_URI}/connectDB?base=/auth/register`, {
-        method: "POST",
-        body: JSON.stringify(form),
-      }).then((res) => res.json());
+      const user = await fetch(
+        `http://localhost:3000/api/connectDB?base=/auth/register`,
+        {
+          method: "POST",
+          body: JSON.stringify(form),
+        }
+      ).then((res) => res.json());
       if (Object.keys(user).length === 0) {
         setIsLoad(false);
         return M.toast({ html: `Користувач з email ${form.email} існує` });

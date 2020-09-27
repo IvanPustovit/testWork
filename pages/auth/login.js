@@ -22,7 +22,7 @@ const login = () => {
       e.preventDefault();
       setIsLoad(true);
       const res = await fetch(
-        `https://test-work-alpha.vercel.app/api/connectDB?base=/auth/login`,
+        `http://localhost:3000/api/connectDB?base=/auth/login`,
         {
           method: "POST",
           body: JSON.stringify(form),
