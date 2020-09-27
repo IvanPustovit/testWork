@@ -1,65 +1,133 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import Timer from "../components/timer";
+import styles from "../styles/Home.module.css";
 
-export default function Home() {
+export default function Home(db) {
+  const [isButton, setIsButton] = useState(false);
+  const [user, setUser] = useState("");
+  const [click, setClick] = useState();
+
+  const router = useRouter();
+
+  const handler = (e) => {
+    setClick({ ...click, [e.target.name]: e.target.value });
+    console.log(click);
+  };
+
+  const handleLink = () => {
+    router.push("/auth/login");
+  };
+
+  const clickButton = async (e) => {
+    try {
+      console.log(e.target.value);
+
+      handler(e);
+      setIsButton(true);
+      setTimeout(() => {
+        setIsButton(false);
+      }, 20000);
+      console.log(click);
+      const res = await fetch(`http://localhost:3000/api/connectDB?base=/`, {
+        method: "POST",
+        body: JSON.stringify(click),
+        userId: user._id,
+      });
+      const userClick = await res.json();
+      console.log(userClick);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchData = async (us) => {
+    try {
+      const data = await fetch(
+        `http://localhost:3000/api/connectDB?userId=${us.userId}`
+      );
+      const dataUser = await data.json();
+      setUser(dataUser);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const res = JSON.parse(localStorage.getItem("user"));
+    if (!res) {
+      return handleLink();
+    }
+    if (res) {
+      fetchData(res);
+    }
+  }, []);
+
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>test work</title>
         <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+        />
       </Head>
-
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        <form onChange={handler} method="POST">
+          <button
+            type="submit"
+            name="button"
+            value="button1"
+            disabled={isButton}
+            onClick={clickButton}
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
+            // onChange={handler}
           >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
+            Кнопка 1
+          </button>
+          <button
+            type="submit"
+            name="button"
+            value="button2"
+            onClick={clickButton}
+            disabled={isButton}
+            // onChange={handler}
           >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+            Кнопка 2
+          </button>
+          <button
+            type="submit"
+            name="button"
+            value="button3"
+            onClick={clickButton}
+            disabled={isButton}
+            // onChange={handler}
+          >
+            Кнопка 3
+          </button>
+        </form>
+        {isButton && <Timer isButton={isButton} />}
+        {user && (
+          <div className="click">
+            <p>Кнопка 1 натиснута {user.clicks.button1} раз</p>
+            <p>Кнопка 3 натиснута {user.clicks.button3} раз</p>
+            <p>Кнопка 2 натиснута {user.clicks.button2} раз</p>
+          </div>
+        )}
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
     </div>
-  )
+  );
 }
+
+// export async function getStaticProps() {
+//   const res = await fetch("http://localhost:3000/api/connectDB");
+//   const db = await res.json();
+
+//   return {
+//     db: {
+//       db,
+//     },
+//   };
+// }

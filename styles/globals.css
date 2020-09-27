@@ -14,3 +14,35 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.loader {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(21, 31, 41, 0.2);
+  z-index: 1000;
+  text-align: center;
+}
+
+#timer {
+  text-align: center;
+  background-color: blue;
+  padding: 10px;
+  margin-top: 50px;
+  font-size: 3em;
+  font-weight: 100;
+  color: white;
+  text-shadow: 0 0 20px #0c0c0c;
+}
+
+.timer-div {
+  display: inline-block;
+  min-width: 90px;
+}
+
+.timer-span {
+  color: #b1cdf1;
+  display: block;
+  font-size: 0.35em;
+  font-weight: 400;
+}
