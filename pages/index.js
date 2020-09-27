@@ -2,6 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Timer from "../components/timer";
+import { BASE_URI } from "../next.config";
 import styles from "../styles/Home.module.css";
 
 export default function Home(db) {
@@ -30,7 +31,7 @@ export default function Home(db) {
         setIsButton(false);
       }, 20000);
       console.log(click);
-      const res = await fetch(`http://localhost:3000/api/connectDB?base=/`, {
+      const res = await fetch(`${BASE_URI}/api/connectDB?base=/`, {
         method: "POST",
         body: JSON.stringify(click),
         userId: user._id,
@@ -44,9 +45,7 @@ export default function Home(db) {
 
   const fetchData = async (us) => {
     try {
-      const data = await fetch(
-        `http://localhost:3000/api/connectDB?userId=${us.userId}`
-      );
+      const data = await fetch(`${BASE_URI}/api/connectDB?userId=${us.userId}`);
       const dataUser = await data.json();
       setUser(dataUser);
     } catch (error) {

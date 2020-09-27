@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Loader from "../../components/Loader";
+import { BASE_URI } from "../../next.config";
 
 const register = () => {
   const [form, setForm] = useState("");
@@ -21,7 +22,7 @@ const register = () => {
       e.preventDefault();
       setIsLoad(true);
       const user = await fetch(
-        `http://localhost:3000/api/connectDB?base=/auth/register`,
+        `${BASE_URI}/api/connectDB?base=/auth/register`,
         {
           method: "POST",
           body: JSON.stringify(form),
