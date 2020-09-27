@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Loader from "../../components/Loader";
-import { BASE_URI } from "../../next.config";
+import { BASE_URI, REGUEST_URI } from "../../next.config";
 
 const register = () => {
   const [form, setForm] = useState("");
@@ -21,13 +21,10 @@ const register = () => {
     try {
       e.preventDefault();
       setIsLoad(true);
-      const user = await fetch(
-        `${BASE_URI}/api/connectDB?base=/auth/register`,
-        {
-          method: "POST",
-          body: JSON.stringify(form),
-        }
-      ).then((res) => res.json());
+      const user = await fetch(`${REGUEST_URI}?base=/auth/register`, {
+        method: "POST",
+        body: JSON.stringify(form),
+      }).then((res) => res.json());
       if (Object.keys(user).length === 0) {
         setIsLoad(false);
         return M.toast({ html: `Користувач з email ${form.email} існує` });

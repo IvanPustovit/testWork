@@ -21,10 +21,13 @@ const login = () => {
     try {
       e.preventDefault();
       setIsLoad(true);
-      const res = await fetch(`${BASE_URI}/api/connectDB?base=/auth/login`, {
-        method: "POST",
-        body: JSON.stringify(form),
-      });
+      const res = await fetch(
+        `${BASE_URI}/auth/login/api/connectDB?base=/auth/login`,
+        {
+          method: "POST",
+          body: JSON.stringify(form),
+        }
+      );
       const user = await res.json();
 
       if (Object.keys(user).length === 0) {
